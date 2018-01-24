@@ -52,5 +52,6 @@ if __name__ == '__main__':
     shared_data = extract_shared_data(response)
     user_profile = get_profile_information(shared_data)
     #f.write("%s"%shared_data)
-    #f.write("%s"%user_profile)
-    pprint(vars(user_profile))
+    media = shared_data['media']['nodes']
+    f.write("%s"%media)
+    #pprint(vars(user_profile))
