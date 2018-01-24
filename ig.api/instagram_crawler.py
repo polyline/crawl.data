@@ -4,6 +4,8 @@ import json
 from json import JSONDecodeError
 import re
 from pprint import pprint
+import time
+from browser import Browser
 
 filepath = "./output"
 f = open(filepath, 'w', encoding="utf-8")
@@ -43,15 +45,41 @@ def get_profile_information(data):
 
 if __name__ == '__main__':
     
-    tag = "cal_foodie"
-
+    tag = "jojoxdaily"
+    
     quote_page = "https://www.instagram.com/%s/"%tag
-    response = BeautifulSoup(requests.get(quote_page).text, "html.parser")
+    
+    browser = Browser()
+    
+    browser.get(quote_page)
+    signin_x_btn = browser.find_one('._5gt5u')
+    if signin_x_btn:
+        signin_x_btn.click()
+
+    signin_x_btn = browser.find_one('._lilm5')
+    if signin_x_btn:
+        browser.scroll_down()
+        browser.js_click(signin_x_btn)
+
+    more_btn = browser.find_one('._1cr2e._epyes')
+    
+    more_btn.click()
+
+    ele_posts = []
+
+    while len(ele_posts) < 50:
+        browser.scroll_down()
+        ele_posts = browser.find('._cmdpi ._mck9w')
+    pageSource = browser.driver.page_source
+    print(len(ele_posts))
+    f.write("%s"%pageSource)
+    
+    response = BeautifulSoup(pageSource, "html.parser")
+    #response = BeautifulSoup(requests.get(quote_page).text, "html.parser")
     #print(response)
     #f.write("%s"%response)
     shared_data = extract_shared_data(response)
     user_profile = get_profile_information(shared_data)
+    pprint(vars(user_profile))
     #f.write("%s"%shared_data)
-    media = shared_data['media']['nodes']
-    f.write("%s"%media)
-    #pprint(vars(user_profile))
+    
