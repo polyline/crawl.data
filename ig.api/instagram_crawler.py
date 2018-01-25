@@ -69,17 +69,27 @@ if __name__ == '__main__':
 
     while len(ele_posts) < 50:
         browser.scroll_down()
-        ele_posts = browser.find('._cmdpi ._mck9w')
+        #ele_posts = browser.find('._cmdpi ._mck9w')
     pageSource = browser.driver.page_source
-    print(len(ele_posts))
-    f.write("%s"%pageSource)
+    #print(len(ele_posts))
+    #f.write("%s"%pageSource)
     
     response = BeautifulSoup(pageSource, "html.parser")
-    #response = BeautifulSoup(requests.get(quote_page).text, "html.parser")
-    #print(response)
     #f.write("%s"%response)
     shared_data = extract_shared_data(response)
     user_profile = get_profile_information(shared_data)
     pprint(vars(user_profile))
     #f.write("%s"%shared_data)
+    
+    
+    rows = response.find_all('div', '_70iju')
+    links = []
+    for row in rows:
+        posts = row.find_all('a')
+        for pt in posts:
+            links.append(pt.attrs['href'])
+    
+    f.write("%s"%links)
+    print(len(links))
+    #response = BeautifulSoup(requests.get(quote_page).text, "html.parser")
     
