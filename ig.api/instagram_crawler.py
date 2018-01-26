@@ -96,21 +96,42 @@ if __name__ == '__main__':
     
     #print("//a[@href="+"'"+links[0]+"'"+"]")
     browser.driver.find_element_by_xpath("//a[@href="+"'"+links[0]+"'"+"]").click()
-    sleep(3)
+    sleep(2)
     imgs = browser.find('._2di5p')
     img_url = imgs[len(imgs)-1].get_attribute('src')
-    f.write("%s"%img_url)
+    f.write("img_url: %s"%img_url)
     
     location = browser.find('._q8ysx._6y8ij')
     location_url = location[0].get_attribute('href')
-    f.write("\n%s"%location_url)
+    f.write("\nlocation_url: %s"%location_url)
     
     taged_people = browser.driver.find_elements_by_css_selector('._n1lhu._4dsc8')
     taged_users_url = []
     for p in taged_people:
         taged_users_url.append(p.get_attribute('href'))
-    f.write("\n%s"%taged_users_url)
-    #sleep(800)
+    f.write("\ntaged_users_url: %s"%taged_users_url)
+    
     like = browser.driver.find_elements_by_css_selector('._nzn1h')
     likes = like[0].find_element_by_tag_name('span').text
-    f.write("\n%s"%likes)
+    f.write("\nlikes: %s"%likes)
+    
+    ele_num_comments = browser.driver.find_elements_by_css_selector('._m3m1c._1s3cd')
+    num_comments = ele_num_comments[0].find_element_by_tag_name('span').text
+    f.write("\nnum_comments: %s"%num_comments)
+    
+    comments = []
+    ele_num_comments[0].click()
+    ele_comments = browser.driver.find_elements_by_css_selector('._ezgzd')
+    for i in range(1, len(ele_comments)):
+        comments.append(ele_comments[i].find_element_by_tag_name('span').find_element_by_tag_name('span').text)
+    f.write("\ncomments: %s"%comments)
+    
+    date_time = browser.driver.find_element_by_css_selector('._p29ma._6g6t5').get_attribute('datetime')
+    f.write("\ndate_time: %s"%date_time)
+    
+    #sleep(800)
+    close_btn = browser.driver.find_element_by_css_selector('._dcj9f')
+    close_btn.click()
+    contents = browser.driver.find_elements_by_css_selector('._4rbun')
+    content = contents[0].find_element_by_tag_name('img').get_attribute('alt')
+    f.write("\ncontent: %s"%content)
