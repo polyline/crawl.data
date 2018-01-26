@@ -6,6 +6,7 @@ import re
 from pprint import pprint
 import time
 from browser import Browser
+from time import sleep
 
 filepath = "./output"
 f = open(filepath, 'w', encoding="utf-8")
@@ -67,9 +68,10 @@ if __name__ == '__main__':
 
     ele_posts = []
 
-    while len(ele_posts) < 50:
+    while len(ele_posts) < 10:
         browser.scroll_down()
-        #ele_posts = browser.find('._cmdpi ._mck9w')
+        ele_posts = browser.find('._cmdpi ._mck9w')
+        #print(len(ele_posts))
     pageSource = browser.driver.page_source
     #print(len(ele_posts))
     #f.write("%s"%pageSource)
@@ -89,7 +91,26 @@ if __name__ == '__main__':
         for pt in posts:
             links.append(pt.attrs['href'])
     
-    f.write("%s"%links)
+    #f.write("%s"%links)
     print(len(links))
-    #response = BeautifulSoup(requests.get(quote_page).text, "html.parser")
     
+    #print("//a[@href="+"'"+links[0]+"'"+"]")
+    browser.driver.find_element_by_xpath("//a[@href="+"'"+links[0]+"'"+"]").click()
+    sleep(3)
+    imgs = browser.find('._2di5p')
+    img_url = imgs[len(imgs)-1].get_attribute('src')
+    f.write("%s"%img_url)
+    
+    location = browser.find('._q8ysx._6y8ij')
+    location_url = location[0].get_attribute('href')
+    f.write("\n%s"%location_url)
+    
+    taged_people = browser.driver.find_elements_by_css_selector('._n1lhu._4dsc8')
+    taged_users_url = []
+    for p in taged_people:
+        taged_users_url.append(p.get_attribute('href'))
+    f.write("\n%s"%taged_users_url)
+    #sleep(800)
+    like = browser.driver.find_elements_by_css_selector('._nzn1h')
+    likes = like[0].find_element_by_tag_name('span').text
+    f.write("\n%s"%likes)
